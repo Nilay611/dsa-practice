@@ -21,6 +21,8 @@ function robHousesM(nums, i = 0, dp) {
 
 function robHousesI(nums) {
   // Iterative
+  if (nums.length === 1) return nums[0];
+
   let dp = new Array(nums.length).fill(-1);
   dp[0] = nums[0];
 
@@ -31,11 +33,65 @@ function robHousesI(nums) {
     dp[i] = Math.max(pick, noPick);
   }
 
-  console.log(nums, dp);
   return dp[nums.length - 1];
 }
 
-let numsArr = [2, 1, 4, 9]; // dp = [2, 2, 6, 11] should look something like this
+function robHouses(nums) {
+  // Iterative & optimized
+  if (nums.length === 1) return nums[0];
+
+  let prev = nums[0];
+  let prev2 = -1;
+  let curr;
+
+  for (let i = 1; i < nums.length; i++) {
+    const pick = nums[i] + (i > 1 ? prev2 : 0);
+    const noPick = prev;
+
+    curr = Math.max(pick, noPick);
+    prev2 = prev;
+    prev = curr;
+  }
+
+  return curr;
+}
+
+function robHousesCircular(nums) {
+  // Iterative & optimized & if nums array is circular
+  if (nums.length === 1) return nums[0];
+
+  let prev = nums[0];
+  let prev2 = -1;
+  let curr;
+
+  for (let i = 1; i < nums.length - 1; i++) {
+    const pick = nums[i] + (i > 1 ? prev2 : 0);
+    const noPick = prev;
+
+    curr = Math.max(pick, noPick);
+    prev2 = prev;
+    prev = curr;
+  }
+
+  prev = nums[1];
+  prev2 = -1;
+  let curr2;
+
+  for (let i = 2; i < nums.length; i++) {
+    const pick = nums[i] + (i > 2 ? prev2 : 0);
+    const noPick = prev;
+
+    curr2 = Math.max(pick, noPick);
+    prev2 = prev;
+    prev = curr2;
+  }
+
+  return Math.max(curr, curr2);
+}
+
+let numsArr = [2, 3, 5]; // dp = [2, 2, 6, 11] should look something like this
 let dpArr = new Array(numsArr.length + 1).fill(-1);
 console.log(robHousesM(numsArr, 0, dpArr));
 console.log(robHousesI(numsArr));
+console.log(robHouses(numsArr));
+console.log(robHousesCircular(numsArr));
