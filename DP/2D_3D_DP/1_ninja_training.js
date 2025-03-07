@@ -56,8 +56,47 @@ function ninjaTrainingI(n, points) {
   dp[0][3] = Math.max(points[0][0], Math.max(points[0][1], points[0][2]));
 
   for (let day = 1; day < n; day++) {
-    for (let i = 0; i < 3; i++) {}
+    for (let last = 0; last < 4; last++) {
+      const maxPoints = 0;
+      dp[day][last] = 0;
+
+      for (let i = 0; i < 3; i++) {
+        if (i !== last) {
+          const pts = points[day][i] + dp[day - 1][i];
+          dp[day][last] = Math.max(maxPoints, pts);
+        }
+      }
+    }
   }
+
+  return dp[n - 1][3];
+}
+
+function ninjaTraining(n, points) {
+  // Iterative & space optimized
+  let prev = new Array(n).fill(-1);
+
+  prev[0] = Math.max(points[0][1], points[0][2]);
+  prev[1] = Math.max(points[0][0], points[0][2]);
+  prev[2] = Math.max(points[0][0], points[0][1]);
+  prev[3] = Math.max(points[0][0], Math.max(points[0][1], points[0][2]));
+
+  for (let day = 1; day < n; day++) {
+    for (let last = 0; last < 4; last++) {
+      const maxPoints = 0;
+      curr = 0;
+
+      for (let i = 0; i < 3; i++) {
+        if (i !== last) {
+          const pts = points[day][i] + prev[i];
+          curr = Math.max(maxPoints, pts);
+          prev[i] = curr;
+        }
+      }
+    }
+  }
+
+  return dp[n - 1][3];
 }
 
 const nVal = 3;
@@ -68,3 +107,4 @@ const pointsArr = [
 ];
 
 console.log(ninjaTrainingM(nVal, pointsArr));
+console.log(ninjaTrainingI(nVal, pointsArr));
